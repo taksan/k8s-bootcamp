@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: cimple-back
+spec:
+ containers:
+ - name: cimple-back
+   image: taksan/cimple-back:v1
+   ports:
+   - containerPort: 8000
+     name: http
+   env:
+   - name: RUN_WITHOUT_DATABASE
+     value: "true"

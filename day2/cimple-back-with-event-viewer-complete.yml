@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cimple-back
+spec:
+  volumes:
+  - name: config-data
+    emptyDir: {}
+  - name: audit-log
+    emptyDir: {}
+  initContainers:
+  - name: init-config
+    image: alpine
+    command:
+    - sh
+    - -c
+    - |
+      cat <<EOF > /opt/config.json
+      {
+        "events_file": "/app/logs/audit.log",
+        "peer_url" : "http://192.168.162.138:5000/api/events"
+      }
+      EOF
+    volumeMounts:
+    - name: config-data
+      mountPath: /opt/
+  containers:
+  - name: cimple-back
+    image: taksan/cimple-back:v1
+    ports:
+    - containerPort: 80
+      name: http
+    env:
+    - name: RUN_WITHOUT_DATABASE
+      value: "true"
+    - name: AUDIT_LOG_FILE
+      value: /app/logs/audit.log
+    volumeMounts:
+    - name: audit-log
+      mountPath: /app/logs
+  - name: cimple-eviewer-collector
+    image: taksan/cimple-eviewer-collector:v1
+    volumeMounts:
+    - name: config-data
+      mountPath: /opt/
+    - name: audit-log
+      mountPath: /app/logs

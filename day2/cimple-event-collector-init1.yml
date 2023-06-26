@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cimple-eviewer-collector
+spec:
+  initContainers:
+  - name: init-config
+    image: alpine
+    command:
+    - sh
+    - -c
+    - |
+      cat <<EOF > /opt/config.json
+      {
+        "events_file": "/opt/audit.log", 
+        "peer_url" : "http://<IP>:5000/api/events"
+      }
+      EOF
+      cat /opt/config.json
+  containers:
+  - name: cimple-eviewer-collector
+    image: taksan/cimple-eviewer-collector:v1
+    imagePullPolicy: Always

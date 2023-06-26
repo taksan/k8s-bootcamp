@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cimple-eviewer-collector
+spec:
+  containers:
+  - name: cimple-eviewer-collector
+    image: taksan/cimple-eviewer-collector:v1
+    env:
+      - name: CIMPLE_COLLECTOR_PEER_URL
+        value: http://192.168.162.138/api/events
+      - name: EVENTS_FILE
+        value: /opt/audit.logs

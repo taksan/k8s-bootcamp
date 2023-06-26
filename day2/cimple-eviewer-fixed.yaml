@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: cimple-eviewer
+spec:
+ containers:
+ - name: cimple-eviewer
+   image: taksan/cimple-eviewer:v1
+   ports:
+   - containerPort: 5000
+     name: http
+   env:
+     - name: CONF_FILE
+       value: /app/config.json
