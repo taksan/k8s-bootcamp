@@ -8,5 +8,4 @@ spec:
    image: taksan/cimple-back:v1
    ports:
    - containerPort: 8000
-     hostPort: 80
      name: http
