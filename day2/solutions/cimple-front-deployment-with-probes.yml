@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-front-deployment
+  labels:
+    app: cimple-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-front
+  template:
+    metadata:
+      name: cimple-front
+      labels:
+        app: cimple-front
+    spec:
+      containers:
+      - name: cimple-front
+        image: taksan/cimple-front:v2
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: BACKEND_URL
+          value: http://localhost:8082
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 10
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
