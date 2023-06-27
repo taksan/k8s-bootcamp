@@ -4,10 +4,9 @@ metadata:
   name: cimple-back
 spec:
   volumes:
-  - name: config-data
-    emptyDir: {}
-  - name: audit-log
-    emptyDir: {}
+   - name: config-data
+     emptyDir: {}
+
   initContainers:
   - name: init-config
     image: alpine
@@ -17,7 +16,7 @@ spec:
     - |
       cat <<EOF > /opt/config.json
       {
-        "events_file": "/app/logs/audit.log",
+        "events_file": "/opt/audit.log",
         "peer_url" : "http://192.168.162.147:5000/api/events"
       }
       EOF
@@ -28,7 +27,7 @@ spec:
   - name: cimple-back
     image: taksan/cimple-back:v1
     ports:
-    - containerPort: 80
+    - containerPort: 8000
       name: http
     env:
     - name: RUN_WITHOUT_DATABASE
@@ -38,5 +37,4 @@ spec:
     volumeMounts:
     - name: config-data
       mountPath: /opt/
-    - name: audit-log
-      mountPath: /app/logs
+
