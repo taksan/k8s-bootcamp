@@ -1,78 +1,72 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: cimple-back-deployment
- labels:
-   app: cimple-back
+  name: cimple-back-deployment
+  labels:
+    app: cimple-back
 spec:
- replicas: 1
- selector:
-   matchLabels:
-     app: cimple-back
- template:
-   metadata:
-     name: cimple-back
-     labels:
-       app: cimple-back
-   spec:
-    volumes:
-    - name: config-data
-      emptyDir: {}
-    - name: audit-log
-      emptyDir: {}
-    initContainers:
-    - name: init-config
-      image: alpine
-      command:
-      - sh
-      - -c
-      - |
-        cat <<EOF > /opt/config.json
-        {
-          "events_file": "/app/logs/audit.log",
-          "peer_url" : "http://192.168.162.132:5000/api/events"
-        }
-        EOF
-      volumeMounts:
-      - name: config-data
-        mountPath: /opt/
-    containers:
-    - name: cimple-back
-      image: taksan/cimple-back:v1
-      ports:
-      - containerPort: 8000
-        name: http
-      env:
-      - name: RUN_WITHOUT_DATABASE
-        value: "true"
-      - name: AUDIT_LOG_FILE
-        value: /app/logs/audit.log
-      startupProbe:
-        httpGet:
-          path: /health
-          port: http
-        periodSeconds: 10
-        failureThreshold: 5
-      readinessProbe:
-        httpGet:
-          path: /health
-          port: http
-        failureThreshold: 30
-        periodSeconds: 10
-      livenessProbe:
-        httpGet:
-          path: /health
-          port: http
-        failureThreshold: 30
-        periodSeconds: 10
-      volumeMounts:
-      - name: audit-log
-        mountPath: /app/logs
-    - name: cimple-eviewer-collector
-      image: taksan/cimple-eviewer-collector:v1
-      volumeMounts:
-      - name: config-data
-        mountPath: /opt/
-      - name: audit-log
-        mountPath: /app/logs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-back
+  template:
+    metadata:
+      name: cimple-back
+      labels:
+        app: cimple-back
+    spec:
+      volumes:
+        - name: config-data
+          emptyDir: {}
 
+      initContainers:
+        - name: init-config
+          image: alpine
+          command:
+            - sh
+            - -c
+            - |
+              cat <<EOF > /opt/config.json
+              {
+                "events_file": "/opt/audit_events.log",
+                "peer_url" : "http://cimple-eviewer/api/events"
+              }
+              EOF
+          volumeMounts:
+            - name: config-data
+              mountPath: /opt/
+      containers:
+        - name: cimple-back
+          image: taksan/cimple-back:v1
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: RUN_WITHOUT_DATABASE
+              value: "true"
+          volumeMounts:
+            - name: config-data
+              mountPath: /app/logs
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+        - name: cimple-eviewer-collector
+          image: taksan/cimple-eviewer-collector:v1
+          volumeMounts:
+            - name: config-data
+              mountPath: /opt/
