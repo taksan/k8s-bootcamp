@@ -30,7 +30,7 @@ spec:
         cat <<EOF > /opt/config.json
         {
           "events_file": "/app/logs/audit.log",
-          "peer_url" : "http://192.168.162.172:5000/api/events"
+          "peer_url" : "http://cimple-eviewer/api/events"
         }
         EOF
       volumeMounts:
