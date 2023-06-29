@@ -15,7 +15,6 @@ spec:
       labels:
         app: cimple-back
     spec:
-      serviceAccount: backend-sa
       volumes:
         - name: config-data
           emptyDir: {}
