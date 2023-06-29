@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cimple-back
+spec:
+  type: LoadBalancer
+  selector:
+    app: cimple-back
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http

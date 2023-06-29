@@ -52,4 +52,35 @@ spec:
           volumeMounts:
             - name: config-data
               mountPath: /opt/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cimple-back
+spec:
+  type: LoadBalancer
+  selector:
+    app: cimple-back
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cimple-back
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: back.prod.cimple.bootcamp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cimple-back
+                port:
+                  number: 80
 

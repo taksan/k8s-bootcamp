@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+ name: sample-job
+spec:
+ template:
+   spec:
+     containers:
+     - name: task
+       image: alpine
+       args:
+       - sh
+       - -c
+       - nslookup cimple-eviewer
+     restartPolicy: Never
+ backoffLimit: 0
