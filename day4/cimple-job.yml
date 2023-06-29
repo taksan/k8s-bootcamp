@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: a-job1
+spec:
+  template:
+    spec:
+      containers:
+      - name: task
+        image: alpine
+        args:
+        - sh
+        - -c
+        - |
+          set -x
+          set -e
+
+          apk add --no-cache curl
+          curl -f -s http://cimple-back/tasks/1/field/script > task-script.sh
+          chmod u+x task-script.sh
+          ./task-script.sh >output.log 2>&1
+          cat output.log
+          STATUS=$?
+          curl -f -X POST -F 'file=@output.log' http://cimple-back/tasks/1/builds/0?exit_code=$STATUS
+      restartPolicy: Never
+  backoffLimit: 0
