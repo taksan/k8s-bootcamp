@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-store-deployment
+  labels:
+    app: cimple-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-store
+  template:
+    metadata:
+      name: cimple-store
+      labels:
+        app: cimple-store
+    spec:
+      containers:
+      - name: cimple-store
+        image: taksan/cimple-store:v1
+        ports:
+        - containerPort: 8001
+          name: http
+        env:
+        - name: STORE_USER
+          value: storeuser
+        - name: STORE_PASS
+          value: c1mpl3-p4ssWOOt
+

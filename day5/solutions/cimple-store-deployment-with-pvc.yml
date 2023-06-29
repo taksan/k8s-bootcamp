@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-store-deployment
+  labels:
+    app: cimple-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-store
+  template:
+    metadata:
+      name: cimple-store
+      labels:
+        app: cimple-store
+    spec:
+      volumes:
+        - name: cimple-store-data
+          persistentVolumeClaim:
+            claimName: cimple-store-pvc
+      containers:
+        - name: cimple-store
+          image: taksan/cimple-store:v1
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: cimple-store-data
+              mountPath: /opt/data
+          env:
+            - name: PASSWORD
+              value: c1mpl3-p4ssWOOt
+
