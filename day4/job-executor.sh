@@ -34,8 +34,7 @@ spec:
               # makes sure curl is installed
               apk add --no-cache curl
 
-              echo "Running task $TASK_ID with image $TASK_IMAGE and build $BUILD_ID"
-
+              # the remaining of the script is the same as executor.sh
               curl -f -s http://cimple-back/tasks/$TASK_ID/field/script > task-script.sh
               chmod u+x task-script.sh
               ./task-script.sh >output.log 2>&1
