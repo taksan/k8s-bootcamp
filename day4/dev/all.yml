@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-front-deployment
+  labels:
+    app: cimple-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-front
+  template:
+    metadata:
+      name: cimple-front
+      labels:
+        app: cimple-front
+    spec:
+      containers:
+      - name: cimple-front
+        image: taksan/cimple-front:v2
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: BACKEND_URL
+          value: http://back.dev.cimple.bootcamp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-eviewer-deployment
+  labels:
+    app: cimple-eviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-eviewer
+  template:
+    metadata:
+      name: cimple-eviewer
+      labels:
+        app: cimple-eviewer
+    spec:
+      containers:
+      - name: cimple-eviewer
+        image: taksan/cimple-eviewer:v1
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: CONF_FILE
+          value: /app/config.json
+        - name: FRONT_URL
+          value: http://172.18.0.3:32000
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 10
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cimple-back-deployment
+  labels:
+    app: cimple-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cimple-back
+  template:
+    metadata:
+      name: cimple-back
+      labels:
+        app: cimple-back
+    spec:
+      volumes:
+        - name: config-data
+          emptyDir: {}
+
+      initContainers:
+        - name: init-config
+          image: alpine
+          command:
+            - sh
+            - -c
+            - |
+              cat <<EOF > /opt/config.json
+              {
+                "events_file": "/opt/audit_events.log",
+                "peer_url" : "http://cimple-eviewer/api/events"
+              }
+              EOF
+          volumeMounts:
+            - name: config-data
+              mountPath: /opt/
+      containers:
+        - name: cimple-back
+          image: taksan/cimple-back:v1
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: RUN_WITHOUT_DATABASE
+              value: "true"
+          volumeMounts:
+            - name: config-data
+              mountPath: /app/logs
+        - name: cimple-eviewer-collector
+          image: taksan/cimple-eviewer-collector:v1
+          volumeMounts:
+            - name: config-data
+              mountPath: /opt/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cimple-front
+spec:
+  selector:
+    app: cimple-front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cimple-back
+spec:
+  type: LoadBalancer
+  selector:
+    app: cimple-back
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cimple-eviewer
+spec:
+  selector:
+    app: cimple-eviewer
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+---
+
