@@ -25,5 +25,5 @@ spec:
         - name: STORE_USER
           value: storeuser
         - name: STORE_PASS
-          value: c1mpl3-p4ssWOOt
+          value: storepass
 

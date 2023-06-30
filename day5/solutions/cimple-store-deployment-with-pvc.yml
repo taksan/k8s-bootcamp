@@ -19,16 +19,20 @@ spec:
         - name: cimple-store-data
           persistentVolumeClaim:
             claimName: cimple-store-pvc
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: cimple-store
           image: taksan/cimple-store:v1
           ports:
-            - containerPort: 80
+            - containerPort: 8001
               name: http
           volumeMounts:
             - name: cimple-store-data
-              mountPath: /opt/data
+              mountPath: /app/data
           env:
-            - name: PASSWORD
-              value: c1mpl3-p4ssWOOt
+          - name: STORE_USER
+            value: storeuser
+          - name: STORE_PASS
+            value: storepass
 

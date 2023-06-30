@@ -5,5 +5,5 @@ metadata:
 rules:
 - apiGroups: ["batch"]
   resources: ["cronjobs"]
-  verbs: ["get", "create", "delete"]
+  verbs: ["get"]
 

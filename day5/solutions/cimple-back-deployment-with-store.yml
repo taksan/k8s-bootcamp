@@ -19,7 +19,6 @@ spec:
       volumes:
         - name: config-data
           emptyDir: {}
-
       initContainers:
         - name: init-config
           image: alpine
@@ -43,10 +42,14 @@ spec:
             - containerPort: 8000
               name: http
           env:
-            - name: RUN_WITHOUT_DATABASE
-              value: "true"
             - name: TASK_EXECUTOR
               value: /app/job-executor.sh
+            - name: STORE_URL
+              value: http://cimple-store
+            - name: STORE_USER
+              value: storeuser
+            - name: STORE_PASS
+              value: storepass
           volumeMounts:
             - name: config-data
               mountPath: /app/logs
