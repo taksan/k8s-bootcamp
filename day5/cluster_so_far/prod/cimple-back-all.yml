@@ -46,7 +46,7 @@ spec:
             - name: RUN_WITHOUT_DATABASE
               value: "true"
             - name: TASK_EXECUTOR
-              value: /app/job_executor.sh
+              value: /app/job-executor.sh
           volumeMounts:
             - name: config-data
               mountPath: /app/logs
