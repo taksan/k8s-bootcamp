@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cimple-back-config
+data:
+  config.json: |
+    {
+      "events_file": "/app/logs/audit_events.log",
+      "peer_url" : "http://cimple-eviewer.audit.svc.cluster.local/api/events"
+    }
