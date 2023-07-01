@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cimple-back-templates
+data:
+  cronjob-template.yml: ""
+  job-template.yml: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: $JOB_NAME
+    spec:
+      ttlSecondsAfterFinished: 10
+      template:
+        spec:
+          containers:
+            - name: task
+              image: $TASK_IMAGE
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  # makes sure curl is installed
+                  apk add --no-cache curl
+
+                  echo "Running task $TASK_ID with image $TASK_IMAGE and build $BUILD_ID"
+
+                  curl -f -s $BACKEND_SERVICE/tasks/$TASK_ID/field/script > task-script.sh
+                  chmod u+x task-script.sh
+                  ./task-script.sh >output.log 2>&1
+
+                  curl -f -X POST -F 'file=@output.log' $BACKEND_SERVICE/tasks/$TASK_ID/builds/$BUILD_ID?exit_code=$?
+          restartPolicy: Never
+      backoffLimit: 0

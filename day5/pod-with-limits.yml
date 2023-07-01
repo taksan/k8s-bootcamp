@@ -1,0 +1,31 @@
+piVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-limits
+spec:
+  containers:
+    - name: mem-demo-container
+      image: python:3.9
+      resources:
+        limits:
+          memory: "80Mi"
+          cpu: 0.5
+        requests:
+          memory: "50Mi"
+          cpu: 0.1
+      command: ["sh", "-c"]
+      args:
+        - |
+          cat <<EOF | python -u
+          import time, os
+          m10m =  b' ' * 1024 * 1024 * 10
+          data = m10m
+          for i in range(10):
+            print("I'm hungry!")
+            time.sleep(10)
+            data=data+m10m
+          
+          while True:
+            print("I'm full")
+            time.sleep(10)
+          EOF

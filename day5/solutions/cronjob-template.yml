@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: $CRONJOB_NAME
+spec:
+  schedule: "$JOB_SCHEDULE"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: task
+              image: curlimages/curl:8.00.1
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  # triggers task
+                  curl -X POST -H "X-CLIENT-ID: $CLIENT_ID" "$BACKEND_SERVICE"/tasks/$TASK_ID/trigger
+          restartPolicy: Never
+      backoffLimit: 0

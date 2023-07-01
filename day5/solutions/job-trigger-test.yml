@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: task-trigger-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: print-date
+        image: curlimages/curl:8.00.1
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            curl -f -X POST -H 'X-CLIENT-ID: shell' 'http://cimple-back/tasks/8/trigger'
+      restartPolicy: OnFailure

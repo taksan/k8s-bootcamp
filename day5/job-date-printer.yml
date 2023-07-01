@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: date-printer-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: print-date
+        image: busybox
+        command: ["/bin/sh", "-c", "date"]
+      restartPolicy: OnFailure
