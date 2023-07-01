@@ -9,22 +9,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: http
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: cimple-store
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: store.dev.cimple.bootcamp
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: cimple-store
-                port:
-                  number: 80
 
