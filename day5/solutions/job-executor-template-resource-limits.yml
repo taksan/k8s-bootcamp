@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: $JOB_NAME
+spec:
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      containers:
+        - name: task
+          image: $TASK_IMAGE
+          resources:
+            limits:
+              cpu: "$CPU_LIMIT"
+              memory: "$MEMORY_LIMIT"
+            requests:
+              cpu: "$CPU_LIMIT"
+              memory: "$MEMORY_LIMIT"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              # makes sure curl is installed
+              apk add --no-cache curl
+
+              echo "Running task $TASK_ID with image $TASK_IMAGE and build $BUILD_ID"
+
+              curl -f -s $BACKEND_SERVICE/tasks/$TASK_ID/field/script > task-script.sh
+              chmod u+x task-script.sh
+              ./task-script.sh >output.log 2>&1
+
+              curl -f -s -X POST -F 'file=@output.log' $BACKEND_SERVICE/tasks/$TASK_ID/builds/$BUILD_ID?exit_code=$?
+      restartPolicy: Never
+  backoffLimit: 0
