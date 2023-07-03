@@ -10,7 +10,4 @@ if [[ ! -e job-template.yml ]]; then
 fi
 
 
-kubectl create configmap cimple-back-templates \
-	--from-file=cronjob-template.yml \
-    --from-file=job-template.yml --dry-run=client -o yaml | \
-	kubectl apply -f
+kubectl create configmap cimple-back-templates --from-file=cronjob-template.yml --from-file=job-template.yml --dry-run=client -o yaml | kubectl apply -f -
