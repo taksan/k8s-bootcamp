@@ -20,13 +20,13 @@ metadata:
 spec:
   containers:
    - name: cimple-back
-    image: taksan/cimple-back:v1
-    ports:
-    - containerPort: 8000
-      name: http
-    env:
-    - name: RUN_WITHOUT_DATABASE
-      value: "true"
+     image: taksan/cimple-back:v1
+     ports:
+     - containerPort: 8000
+       name: http
+     env:
+     - name: RUN_WITHOUT_DATABASE
+       value: "true"
 ---
 apiVersion: v1
 kind: Pod

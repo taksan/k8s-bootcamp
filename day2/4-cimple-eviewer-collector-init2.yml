@@ -4,8 +4,8 @@ metadata:
   name: cimple-eviewer-collector
 spec:
   volumes:
-   - name: config-data
-     emptyDir: {}
+  - name: config-data
+    emptyDir: {}
   initContainers:
   - name: init-config
     image: alpine
@@ -16,9 +16,10 @@ spec:
       cat <<EOF > /opt/config.json
       {
         "events_file": "/opt/audit.log",
-        "peer_url" : "http://192.168.162.138:5000/api/events"
+        "peer_url" : "http://IP:5000/api/events"
       }
       EOF
+      cat /opt/config.json
     volumeMounts:
     - name: config-data
       mountPath: /opt/

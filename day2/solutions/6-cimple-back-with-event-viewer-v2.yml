@@ -6,6 +6,8 @@ spec:
   volumes:
    - name: config-data
      emptyDir: {}
+   - name: logs
+     emptyDir: {}
   initContainers:
   - name: init-config
     image: alpine
@@ -15,7 +17,7 @@ spec:
     - |
       cat <<EOF > /opt/config.json
       {
-        "events_file": "/opt/audit_events.log",
+        "events_file": "/app/logs/audit_events.log",
         "peer_url" : "http://192.168.162.131:5000/api/events"
       }
       EOF
@@ -32,11 +34,13 @@ spec:
     - name: RUN_WITHOUT_DATABASE
       value: "true"
     volumeMounts:
-    - name: config-data
+    - name: logs
       mountPath: /app/logs
   - name: cimple-eviewer-collector
     image: taksan/cimple-eviewer-collector:v1
     volumeMounts:
     - name: config-data
       mountPath: /opt/
+    - name: logs
+      mountPath: /app/logs
 
