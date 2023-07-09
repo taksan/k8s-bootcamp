@@ -5,10 +5,7 @@ metadata:
 spec:
   containers:
   - name: cimple-front
-    image: taksan/cimple-front:v2
+    image: taksan/cimple-front:v1
     ports:
     - containerPort: 80
       name: http
-    env:
-    - name: BACKEND_URL
-      value: http://localhost:8081
