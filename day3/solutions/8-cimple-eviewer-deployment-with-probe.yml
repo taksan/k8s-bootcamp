@@ -30,15 +30,3 @@ spec:
             port: http
           periodSeconds: 10
           failureThreshold: 5
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          failureThreshold: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          failureThreshold: 30
-          periodSeconds: 10

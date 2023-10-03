@@ -1,0 +1,1 @@
+./install-ingress-controller.sh

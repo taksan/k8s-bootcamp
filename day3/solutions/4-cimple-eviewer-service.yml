@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cimple-front
+  name: cimple-eviewer
 spec:
-  selector:
-    app: cimple-front
   type: NodePort
+  selector:
+    app: cimple-eviewer
   ports:
     - protocol: TCP
       port: 80
       targetPort: http
-      nodePort: 32000

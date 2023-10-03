@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Based on https://kind.sigs.k8s.io/docs/user/quick-start/
+
 # Creates a cluster without the default networking addon because we will use calico 
 kind create cluster --config=kind-config.yaml
 
