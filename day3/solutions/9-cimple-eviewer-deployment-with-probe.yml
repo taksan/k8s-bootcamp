@@ -21,12 +21,12 @@ spec:
           ports:
             - containerPort: 80
               name: http
-    env:
-      - name: CONF_FILE
-        value: conf.json
-    startupProbe:
-      httpGet:
-        path: /health
-        port: http
-      failureThreshold: 5
-      periodSeconds: 5
+          env:
+            - name: CONF_FILE
+              value: conf.json
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 5
+            periodSeconds: 5

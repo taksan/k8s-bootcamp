@@ -23,7 +23,7 @@ spec:
           name: http
         env:
         - name: BACKEND_URL
-          value: http://localhost:8082
+          value: http://localhost:8081
 ---
 apiVersion: v1
 kind: Pod
