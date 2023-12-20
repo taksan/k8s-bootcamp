@@ -17,7 +17,7 @@ spec:
    spec:
      containers:
      - name: cimple-eviewer
-       image: taksan/cimple-eviewer:v1
+       image: taksan/cimple-eviewer:v2
        ports:
        - containerPort: 5000
          name: http
