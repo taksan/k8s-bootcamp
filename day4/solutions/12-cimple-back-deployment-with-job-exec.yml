@@ -48,7 +48,6 @@ spec:
           volumeMounts:
             - name: config-data
               mountPath: /app/logs
-
           startupProbe:
             httpGet:
               path: /health
