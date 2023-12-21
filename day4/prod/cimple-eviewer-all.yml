@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cimple-eviewer-deployment
+  namespace: prod
   labels:
     app: cimple-eviewer
 spec:
@@ -16,37 +17,38 @@ spec:
         app: cimple-eviewer
     spec:
       containers:
-      - name: cimple-eviewer
-        image: taksan/cimple-eviewer:v1
-        ports:
-        - containerPort: 5000
-          name: http
-        env:
-        - name: CONF_FILE
-          value: /app/config.json
-        startupProbe:
-          httpGet:
-            path: /health
-            port: http
-          periodSeconds: 10
-          failureThreshold: 5
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          failureThreshold: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          failureThreshold: 30
-          periodSeconds: 10
+        - name: cimple-eviewer
+          image: taksan/cimple-eviewer:v1
+          ports:
+            - containerPort: 5000
+              name: http
+          env:
+            - name: CONF_FILE
+              value: /app/config.json
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: cimple-eviewer
+  namespace: prod
 spec:
   selector:
     app: cimple-eviewer
@@ -60,6 +62,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cimple-eviewer
+  namespace: prod
 spec:
   ingressClassName: nginx
   rules:
