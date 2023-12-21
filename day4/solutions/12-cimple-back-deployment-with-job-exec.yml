@@ -18,6 +18,8 @@ spec:
       volumes:
         - name: config-data
           emptyDir: {}
+        - name: logs
+          emptyDir: {}
       initContainers:
         - name: init-config
           image: alpine
@@ -27,7 +29,7 @@ spec:
             - |
               cat <<EOF > /opt/config.json
               {
-                "events_file": "/opt/audit_events.log",
+                "events_file": "/app/logs/audit_events.log",
                 "peer_url" : "http://cimple-eviewer.audit.svc.cluster.local/api/events"
               }
               EOF
@@ -46,7 +48,7 @@ spec:
             - name: TASK_EXECUTOR
               value: /app/job-executor.sh
           volumeMounts:
-            - name: config-data
+            - name: logs
               mountPath: /app/logs
           startupProbe:
             httpGet:
@@ -71,3 +73,5 @@ spec:
           volumeMounts:
             - name: config-data
               mountPath: /opt/
+            - name: logs
+              mountPath: /app/logs

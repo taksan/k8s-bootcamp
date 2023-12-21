@@ -18,7 +18,8 @@ spec:
       volumes:
         - name: config-data
           emptyDir: {}
-
+        - name: logs
+          emptyDir: {}
       initContainers:
         - name: init-config
           image: alpine
@@ -28,7 +29,7 @@ spec:
             - |
               cat <<EOF > /opt/config.json
               {
-                "events_file": "/opt/audit_events.log",
+                "events_file": "/app/logs/audit_events.log",
                 "peer_url" : "http://cimple-eviewer.audit.svc.cluster.local/api/events"
               }
               EOF
@@ -45,11 +46,30 @@ spec:
             - name: RUN_WITHOUT_DATABASE
               value: "true"
           volumeMounts:
-            - name: config-data
+            - name: logs
               mountPath: /app/logs
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
         - name: cimple-eviewer-collector
           image: taksan/cimple-eviewer-collector:v1
           volumeMounts:
             - name: config-data
               mountPath: /opt/
-
+            - name: logs
+              mountPath: /app/logs
