@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cimple-front-deployment
+  namespace: dev
   labels:
     app: cimple-front
 spec:
