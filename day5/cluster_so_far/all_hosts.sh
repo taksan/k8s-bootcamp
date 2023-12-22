@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # shellcheck disable=SC2046
-cd $(dirname $(realpath $0))
+cd $(dirname $(realpath "$0"))
 
 function add_to_hosts() {
   ../../scripts/create-ingress-host-entry.sh "$@"
