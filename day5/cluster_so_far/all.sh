@@ -10,4 +10,4 @@ sed 's/$ENVIRONMENT/prod/g' all.yml | kubectl apply -f -
 
 kubectl apply -f cimple-eviewer-all.yml
 
-#./install-ingress-controller.sh
+./install-ingress-controller.sh
