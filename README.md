@@ -3,7 +3,7 @@
 ## Português
 
 Esse repositório contém exemplos para acompanhar o k8s bootcamp que eu
-desenvolvi. Diretório contém os exemplos daquele dia.
+desenvolvi. Cada diretório contém os exemplos e exercícios do dia em questão.
 
 Todas as imagens docker referenciadas nos manifestos estão presentes no
 [Docker Hub](https://hub.docker.com/). As imagens possuem versão x86\_64 e
