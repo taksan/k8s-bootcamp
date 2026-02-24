@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: trial-and-error
 spec:
-  serviceAccount: backend-sa
+  serviceAccountName: backend-sa
   containers:
     - name: main
       image: bitnami/kubectl
